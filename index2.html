@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module">
+      import { h, Component, render } from 'https://unpkg.com/preact@latest?module';
+      import { useState, useEffect, useCallback } from 'https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module';
+      import htm from 'https://unpkg.com/htm?module';
+      // Create your app
+      // Initialize htm with Preact
+      const html = htm.bind(h);
+
+      function useCounter(valueFilled) {
+        const [value, setValue] = useState(valueFilled);
+        const increment = useCallback( () => { setValue(value + 1); }, [value] );
+        const decrement = useCallback( () => { setValue( (value - 1 <0)?0:(value - 1) ); }, [value] );
+        return { value, increment , decrement };
+      }
+
+      // First fffffhh
+      function Counter(props) {
+        const { value, increment, decrement } = useCounter(props.value);
+        return html`
+          <div>
+            Counter A: ${value}
+            <button onClick=${increment}>+</button>
+            <button onClick=${decrement}>-</button>
+          </div>`;
+      }
+
+
+      function Hello( props ) {
+        var renderthis = html`<h1>Hello ${props.name2}!</h1>`;
+        return renderthis;
+      }
+
+      class App extends Component {
+        state = [
+          {value:20},
+          {value:30}
+        ];
+
+
+
+        render( props  ){
+          return html`<${Hello} name2="${props.name}"/>${ this.state.map( vall => ( html`<${Counter} value=${vall.value} />` ) ) }` ;
+        }
+      }
+
+      render( html`<${App} name="1ramulu" />`  , document.getElementById("freak"));
+    </script>
+  </head>
+  <body id="freak">
+    fuckfuckfuck
+  </body>
+</html>
