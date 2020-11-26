@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module">
+      import { h, Component, render } from 'https://unpkg.com/preact@latest?module';
+      import { useState, useEffect, useCallback } from 'https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module';
+      import htm from 'https://unpkg.com/htm?module';
+      import Router from 'https://unpkg.com/preact-router?module';  
+      // Create your app
+      // Initialize htm with Preact
+      const html = htm.bind(h);
+
+      function Hello( props ) {
+        var renderthis = html`<h1>Hello ${props.name2}!</h1>`;
+        return renderthis;
+      }
+
+      function Namer( props ) {
+        var renderthis = html`<h1>${props.dataobject.id} - ${props.dataobject.name}</h1><button onClick=${()=> {props.action(props.index) } }>dd</button>`;
+        return renderthis;
+      }
+
+      function Namefuck( props ) {
+        var renderthis = html``;
+        if( props.dataobject.n > 0 ){
+          var renderthis = html`fuck ${props.dataobject.id} - ${props.dataobject.name} ${ props.dataobject.n * props.dataobject.id }<br/>`;
+        }
+        return renderthis;
+      }
+
+      class App extends Component {
+        constructor() {
+            super();
+            this.state = { data : [{"id":null,"name":""}] };
+        }
+
+        componentDidMount() {
+            fetch('https://5dbfafd0e295da001400b88b.mockapi.io/v1/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => response.json()).then(data=> { const numberDatapoints = data.length; for ( var i=0;i<numberDatapoints;i++ ) { data[i].n = 0 } ; this.setState({ data: data }) }  );
+        }
+
+        // ${ this.state.map( vall => ( html`<${Counter} value=${vall.value} />` ) ) }
+        fuckname = (index) => {
+          this.setState(
+            function(pS,cP){
+              console.log( pS , index );
+              pS.data[index].n = pS.data[index].n + 1;
+              return pS;
+            }
+          )
+        }
+        
+        render( props  ){
+          console.log( this.state );
+          return html`
+          <${Hello} name2="${props.name}"/>
+          ${ this.state.data.map( (datapoint,index) => ( html`<${Namer} index=${index} action=${this.fuckname} dataobject=${datapoint}/>` ) ) }  
+          <div style="color:red">
+          hello
+          ${ this.state.data.map( vall => (  
+              html`<${Namefuck} dataobject=${vall}/>` 
+          ) ) } 
+          </div>
+          ` ;
+        }
+      }
+
+      render( html`<${App} name="World" />`  , document.getElementById("freak"));
+    </script>
+  </head>
+  <body id="freak">
+  </body>
+</html>
