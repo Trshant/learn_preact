@@ -11,8 +11,8 @@
 
       function useCounter(valueFilled) {
         const [value, setValue] = useState(valueFilled);
-        const increment = useCallback( () => { setValue(value + 1); }, [value] );
-        const decrement = useCallback( () => { setValue( (value - 1 <0)?0:(value - 1) ); }, [value] );
+        const increment = useCallback( () => { setValue(value + 1); console.log(value); }, [value] );
+        const decrement = useCallback( () => { setValue( (value - 1 <0)?0:(value - 1) ); console.log(value); }, [value] );
         return { value, increment , decrement };
       }
 
@@ -27,6 +27,20 @@
           </div>`;
       }
 
+      class CounterProps extends Component {
+        constructor( props ) {
+            super(props);
+        }
+        
+        render(props) {
+          return html`
+          <div>
+            Counter B: ${props.value}
+            <button onClick=${()=>{ props.increment(props.value) } }>+</button>
+            <button onclick=${()=>{ props.decrement(props.value) } }>-</button>
+          </div>`;
+        }
+      }
 
       function Hello( props ) {
         var renderthis = html`<h1>Hello ${props.name2}!</h1>`;
@@ -34,15 +48,28 @@
       }
 
       class App extends Component {
-        state = [
-          {value:20},
-          {value:30}
-        ];
+        constructor( props ) {
+            super(props);
+            this.state = {
+              value1 :20,
+              value2 :30
+            };
+        }
 
+        
+        increment = (vallue) => { this.setState({value1 : vallue + 1 }) } ;
+        decrement = (vallue) => { this.setState({value1 : vallue - 1 }) } ;
 
 
         render( props  ){
-          return html`<${Hello} name2="${props.name}"/>${ this.state.map( vall => ( html`<${Counter} value=${vall.value} />` ) ) }` ;
+          // ${ this.state.map( vall => { return html`<${Counter} value=${vall.value} />` ;  } ) }
+          /* <${Counter} value=${this.state.value2} />  */
+          return html`
+            <${Hello} name2="${props.name}"/> 
+            <${CounterProps} value=${this.state.value1} decrement=${this.decrement} increment=${this.increment} />
+            <br/>${this.state.value1}
+            <br/>${this.state.value2}
+          ` ;
         }
       }
 

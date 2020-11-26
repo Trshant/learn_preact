@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module">
+      import { h, Component, render } from 'https://unpkg.com/preact@latest?module';
+      import { useState, useEffect, useCallback } from 'https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module';
+      import htm from 'https://unpkg.com/htm?module';
+      import Router from 'https://unpkg.com/preact-router?module';  
+      history.replaceState(0,0,'/');  // jsfiddle url defaults to `/_display`
+      // Create your app
+      // Initialize htm with Preact
+      const html = htm.bind(h);
+
+      function Hello( props ) {
+        var renderthis = html`<h1>Hello ${props.name2}!</h1>`;
+        return renderthis;
+      }
+
+      function Namer( props ) {
+        var renderthis = html`<h1>${props.id} - ${props.name}</h1>`;
+        return renderthis;
+      }
+
+      class App extends Component {
+        constructor() {
+            super();
+            this.state = { data : [{"id":null,"name":""}] };
+        }
+
+        componentDidMount() {
+            fetch('https://5dbfafd0e295da001400b88b.mockapi.io/v1/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => response.json()).then(data=> this.setState({ data: data })  );
+        }
+
+        // ${ this.state.map( vall => ( html`<${Counter} value=${vall.value} />` ) ) }
+        
+        render( props  ){
+          return html`<${Hello} name2="${props.name}"/> <${Router}>
+			<${Home} path="/" />
+			<${Profile} path="/profile/:user?" />
+		<//>  ${ this.state.data.map( vall => ( html`<${Namer} id=${vall.id} name=${vall.name} />` ) ) }  ` ;
+        }
+      }
+
+      render( html`<${App} name="World" />`  , document.getElementById("freak"));
+    </script>
+  </head>
+  <body id="freak">
+  </body>
+</html>
