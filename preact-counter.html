@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module">
+      import { h, Component, render } from 'https://unpkg.com/preact@latest?module';
+      import { useState, useEffect, useCallback } from 'https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module';
+      import htm from 'https://unpkg.com/htm?module';
+      // Create your app
+      // Initialize htm with Preact
+      const html = htm.bind(h);
+
+      class CounterProps extends Component {
+        constructor( props ) {
+            super(props);
+        }
+        
+        render(props) {
+          return html`
+          <div>
+            Counter B: ${props.value}
+            <button onClick=${()=>{ props.increment(props.value,props.index) } }>+</button>
+            <button onclick=${()=>{ props.decrement(props.value,props.index) } }>-</button>
+          </div>`;
+        }
+      }
+
+      class App extends Component {
+        constructor( props ) {
+            super(props);
+            this.state = {data: [
+              { value :20 },
+              { value :30 }
+            ]};
+        }
+
+        increment = (value,index) => { this.setState( function( prevState , currProps ){ 
+          prevState.data[index].value = prevState.data[index].value + 1; return prevState;
+        } ) } ;
+        decrement = (value,index) => { this.setState( function( prevState , currProps ){ 
+          prevState.data[index].value = prevState.data[index].value - 1; return prevState;
+        } ) } ;
+
+        render( props  ){
+          /* <${Counter} value=${this.state.value2} />  */
+          console.log(this.state);
+          return html`
+            <br/>${this.state.data[0].value}
+            <br/>${this.state.data[1].value}
+            <br/>${ this.state.data.map( (datapoint,index) => { return html`<${CounterProps} value=${datapoint.value} index=${index} decrement=${this.decrement} increment=${this.increment} />` ;  } ) }
+          ` ;
+        }
+      }
+
+      render( html`<${App} name="1ramulu" />`  , document.getElementById("freak"));
+    </script>
+  </head>
+  <body id="freak">
+  </body>
+</html>
